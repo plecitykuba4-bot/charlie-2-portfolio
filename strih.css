@@ -321,8 +321,18 @@
   .strih__roky-osy span:nth-child(even),
   .strih__roky-osy .strih__dnes { display: none; }
   .strih__pin { padding-top: 20px; }
-  .strih__horni { grid-template-columns: 1fr; align-content: center; }
-  .strih__monitor { display: none; }
+  /* Monitor zůstává i na mobilu, jen menší: jinak nad textem zeje
+     prázdná půlka obrazovky. */
+  .strih__horni { grid-template-columns: 1fr; align-content: end; gap: 16px; }
+  .strih__monitor {
+    justify-self: stretch;
+    height: auto;
+    max-height: 30svh;
+    aspect-ratio: 16 / 10;
+  }
+  .strih__titulek { left: 12px; bottom: 12px; }
+  .strih__titulek .strih__titulek-jmeno { font-size: 16px; }
+  .strih__titulek-role { font-size: 11.5px; }
   .strih__nazev { font-size: clamp(30px, 9vw, 44px); }
   .strih__popis { font-size: 14px; }
   .strih__osa { padding: 8px 10px 10px; }

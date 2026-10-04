@@ -165,7 +165,7 @@ export async function spust(clanek, { priOtevreni }) {
 
   let oddaleni = 1;
   z.priVelikosti((s) => {
-    oddaleni = s.pomer >= 1.6 ? 1 : 1 + (1.6 - s.pomer) * 0.42;
+    oddaleni = s.pomer >= 1.6 ? 1 : 1 + (1.6 - s.pomer) * 0.24;
     karty.forEach((k) => { k.sirkaStitku = k.stitek.offsetWidth; });
   });
 

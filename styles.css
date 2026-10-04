@@ -436,6 +436,8 @@ a { color: inherit; text-decoration: none; }
   .hero__left {
     grid-column: 1;
     grid-row: 1;
+    /* Nad portrétem, ať štítky „Pracuji pro“ nezmizí pod ramenem. */
+    z-index: 3;
     padding: calc(var(--nav-h) + 18px) var(--rail) 0 var(--rail);
   }
 
