@@ -1,0 +1,337 @@
+/* Kudy jsem šel — střižna. Tokeny přicházejí ze styles.css. */
+.strih { display: none; }
+
+.sekce--strih .strih {
+  display: block;
+  position: relative;
+  /* Šest projektů, osm let: přehrávací hlava dostane tři obrazovky scrollu. */
+  height: 330svh;
+  margin-top: clamp(10px, 2vh, 24px);
+}
+
+/* Ve střižně zůstává původní seznam jen pro čtečky. */
+.sekce--strih .cesta {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.strih__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(16px, 2.6vh, 30px);
+  padding-block: clamp(24px, 4vh, 40px) clamp(18px, 3vh, 32px);
+}
+
+.strih__horni {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(20px, 3.4vw, 56px);
+  align-items: center;
+}
+
+.strih__info { max-width: 46ch; }
+.strih__info.meni > * { animation: strih-info .6s cubic-bezier(.16, 1, .3, 1) both; }
+.strih__info.meni > :nth-child(2) { animation-delay: .04s; }
+.strih__info.meni > :nth-child(3) { animation-delay: .08s; }
+.strih__info.meni > :nth-child(4) { animation-delay: .12s; }
+
+@keyframes strih-info { from { opacity: 0; transform: translateY(14px); } }
+
+.strih__stopa {
+  margin: 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--orange-400);
+}
+
+.strih__nazev {
+  margin: 10px 0 0;
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: clamp(36px, 4.6vw, 72px);
+  line-height: 1.04;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.strih__roky {
+  margin: 10px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, .72);
+}
+
+.strih__popis {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, .62);
+}
+
+/* Programový monitor: portrét s titulkem ve spodní třetině. */
+.strih__monitor {
+  position: relative;
+  margin: 0;
+  height: 100%;
+  max-height: 480px;
+  aspect-ratio: 16 / 10;
+  justify-self: end;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 16px;
+  background: #000;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .4);
+}
+
+.strih__monitor img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 26%;
+}
+
+.strih__program,
+.strih__tc {
+  position: absolute;
+  top: 14px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  background: rgba(0, 0, 0, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.strih__program { left: 14px; display: flex; align-items: center; gap: 7px; }
+
+.strih__program::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3b1f;
+  animation: strih-rec 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes strih-rec { 50% { opacity: .25; } }
+
+.strih__tc {
+  right: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .06em;
+  color: var(--orange-400);
+}
+
+.strih__titulek {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+}
+
+.strih__titulek span {
+  padding: 6px 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.strih__titulek .strih__titulek-jmeno {
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: 22px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.strih__titulek-role {
+  font-size: 13px;
+  color: var(--paper);
+  background: var(--orange-600);
+}
+
+.strih__titulek.meni span { animation: strih-titulek .7s cubic-bezier(.16, 1, .3, 1) both; }
+.strih__titulek.meni span + span { animation-delay: .08s; }
+
+@keyframes strih-titulek { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* Časová osa se stopami. */
+.strih__osa {
+  --jmenovka: clamp(44px, 9vw, 132px);
+  --rozsah: calc(var(--konec) - var(--zacatek));
+  padding: 10px 14px 14px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background: #1b1512;
+}
+
+.strih__pravitko,
+.strih__radek {
+  display: grid;
+  grid-template-columns: var(--jmenovka) minmax(0, 1fr);
+  align-items: center;
+}
+
+.strih__pravitko { height: 26px; }
+
+.strih__roky-osy {
+  position: relative;
+  height: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.strih__roky-osy span {
+  position: absolute;
+  bottom: 6px;
+  left: calc((var(--rok) - var(--zacatek)) / var(--rozsah) * 100%);
+  padding-left: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, .46);
+}
+
+.strih__roky-osy span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, .22);
+}
+
+.strih__roky-osy .strih__dnes { bottom: auto; top: 0; color: var(--orange-400); }
+.strih__roky-osy .strih__dnes::before { bottom: auto; top: 14px; height: 6px; background: var(--orange-400); }
+
+.strih__stopy { position: relative; }
+
+.strih__radek {
+  height: clamp(30px, 4.4vh, 40px);
+  border-bottom: 1px solid rgba(255, 255, 255, .05);
+}
+
+.strih__jmenovka {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .5);
+}
+
+.strih__jmenovka b { margin-right: 6px; color: var(--orange-400); }
+
+.strih__draha {
+  position: relative;
+  height: 74%;
+}
+
+/* Klip ukazuje filmový pás ze snímku oboru, jako náhledy ve střihovém
+   programu. Budoucí klipy jsou ztlumené, protože k nim hlava ještě nedojela. */
+.strih__klip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc((var(--od) - var(--zacatek)) / var(--rozsah) * 100%);
+  width: calc((var(--do) - var(--od)) / var(--rozsah) * 100%);
+  margin: 0;
+  padding: 0 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 6px;
+  background:
+    linear-gradient(90deg, rgba(124, 28, 6, .92), rgba(192, 67, 9, .62)),
+    var(--obr) left center / auto 100% repeat-x;
+  color: var(--paper);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: .32;
+  filter: grayscale(.7);
+  transition: opacity .5s, filter .5s, border-color .4s, box-shadow .4s;
+}
+
+.strih__klip span { display: block; overflow: hidden; text-overflow: ellipsis; }
+
+.strih__klip.je-prosly { opacity: .78; filter: none; }
+
+.strih__klip.je-aktivni {
+  opacity: 1;
+  filter: none;
+  border-color: var(--orange-400);
+  box-shadow: 0 0 0 1px var(--orange-400), 0 0 24px rgba(248, 134, 8, .35);
+}
+
+.strih__klip:hover { opacity: 1; filter: none; }
+
+/* Přehrávací hlava přes pravítko i všechny stopy. */
+.strih__hlava {
+  position: absolute;
+  top: -26px;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--orange-400);
+  box-shadow: 0 0 12px rgba(248, 134, 8, .6);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.strih__hlava-rok {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--orange-400);
+  transform: translate(-50%, -100%);
+}
+
+.strih__nazev.je-dlouhy { font-size: clamp(30px, 3.4vw, 52px); }
+
+@media (max-width: 900px) {
+  .sekce--strih .strih { height: 300svh; }
+  .strih__nazev.je-dlouhy { font-size: clamp(26px, 7vw, 36px); }
+  /* Osm let na 300 px se nevejde, stačí každý druhý rok. */
+  .strih__roky-osy span:nth-child(even),
+  .strih__roky-osy .strih__dnes { display: none; }
+  .strih__pin { padding-top: 20px; }
+  .strih__horni { grid-template-columns: 1fr; align-content: center; }
+  .strih__monitor { display: none; }
+  .strih__nazev { font-size: clamp(30px, 9vw, 44px); }
+  .strih__popis { font-size: 14px; }
+  .strih__osa { padding: 8px 10px 10px; }
+  /* Na úzké ose stačí označení stopy. */
+  .strih__jmenovka { font-size: 0; }
+  .strih__jmenovka b { margin: 0; font-size: 11px; }
+  .strih__klip { padding: 0 6px; font-size: 10.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strih__info.meni > *, .strih__titulek.meni span, .strih__program::before { animation: none; }
+}

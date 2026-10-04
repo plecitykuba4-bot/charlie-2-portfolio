@@ -1,0 +1,317 @@
+/* Volba zakázky ve stylu exportu ze střihového programu.
+   Tokeny přicházejí ze styles.css. */
+.export {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 22px;
+  color: var(--paper);
+  background: rgba(22, 16, 12, .86);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 40px 80px -30px rgba(40, 10, 0, .6);
+}
+
+.export__lista {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.export__lista p { margin: 0; }
+
+.export__lista p::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 9px;
+  border-radius: 50%;
+  background: var(--orange-400);
+  vertical-align: 1px;
+}
+
+.export__preset {
+  margin-left: auto;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, .7);
+  letter-spacing: .1em;
+}
+
+.export__telo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px;
+}
+
+.export__volby {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.export__volby legend,
+.export__stitek {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .5);
+}
+
+.export__volby ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.export__volba {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 22px;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .03);
+  cursor: pointer;
+  transition: background .3s, border-color .3s;
+}
+
+.export__volba:hover { background: rgba(255, 255, 255, .06); }
+
+.export__volba input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.export__volba:has(input:focus-visible) {
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+.export__volba:has(input:checked) {
+  border-color: rgba(248, 134, 8, .7);
+  background: rgba(225, 101, 11, .16);
+}
+
+.export__ikona {
+  grid-row: span 2;
+  display: grid;
+  place-content: center;
+  color: rgba(255, 255, 255, .6);
+  transition: color .3s;
+}
+
+.export__ikona svg { width: 22px; height: 22px; }
+.export__volba:has(input:checked) .export__ikona { color: var(--orange-400); }
+
+.export__nazev {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.export__popis {
+  grid-column: 2;
+  font-size: 12px;
+  color: rgba(255, 255, 255, .5);
+}
+
+.export__zatrzitko {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid rgba(255, 255, 255, .35);
+  border-radius: 6px;
+  transition: background .25s, border-color .25s;
+}
+
+.export__zatrzitko::after {
+  content: "";
+  position: absolute;
+  left: 5.5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+
+.export__volba:has(input:checked) .export__zatrzitko {
+  border-color: var(--orange-400);
+  background: var(--orange-400);
+}
+
+.export__volba:has(input:checked) .export__zatrzitko::after { transform: rotate(45deg) scale(1); }
+
+/* Výstup: pořadí práce. */
+.export__vystup {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #110c09;
+}
+
+.export__plan {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.export__krok {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.export__cislo {
+  display: grid;
+  place-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background: var(--orange-400);
+}
+
+.export__krok b {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.export__krok small {
+  grid-column: 2;
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, .45);
+}
+
+/* Mezi kroky: předání, které u jednoho člověka odpadá. */
+.export__predani {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  padding: 4px 0 4px 22px;
+  border-left: 1.5px dashed rgba(255, 255, 255, .16);
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, .4);
+}
+
+.export__predani s {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) left 55% / 100% 1px no-repeat;
+}
+
+.export__predani em {
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-style: normal;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--orange-400);
+  background: rgba(248, 134, 8, .12);
+}
+
+.export__prazdny {
+  padding: 10px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, .5);
+}
+
+.export__plan .novy { animation: export-novy .5s cubic-bezier(.16, 1, .3, 1) both; }
+.export__predani.novy s { animation: export-skrt .6s cubic-bezier(.16, 1, .3, 1) .25s both; }
+
+@keyframes export-novy { from { opacity: 0; transform: translateY(8px); } }
+@keyframes export-skrt { from { background-size: 0 1px; } }
+
+.export__souhrn {
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, .7);
+}
+
+.export__souhrn strong {
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: .02em;
+  color: var(--paper);
+}
+
+.export__pata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.export__poznamka {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, .5);
+}
+
+.export__tlacitko {
+  margin-top: 0;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.export__tlacitko[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* Vyplněná zpráva ve formuláři krátce blikne, ať je vidět, kam výběr šel. */
+.formular textarea.z-exportu { animation: export-vyplneno 1.4s cubic-bezier(.16, 1, .3, 1); }
+
+@keyframes export-vyplneno {
+  0%, 30% { border-color: var(--orange-600); box-shadow: 0 0 0 4px rgba(226, 86, 13, .22); }
+}
+
+@media (max-width: 720px) {
+  .export__telo { grid-template-columns: 1fr; padding: 14px; }
+  .export__pata { padding: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .export__plan .novy,
+  .export__predani.novy s,
+  .formular textarea.z-exportu { animation: none; }
+}

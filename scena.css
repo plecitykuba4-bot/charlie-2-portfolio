@@ -1,0 +1,735 @@
+/* Interaktivní části portfolia: 3D prstenec, pětka na ledě, náhledy,
+   lightbox. Tokeny přicházejí ze styles.css. */
+
+/* Společná tmavá scéna ------------------------------------------------- */
+/* 3D má vlastní zónu: tmavou desku vedle textu nebo pod ním, nikdy pod
+   ním ani přes něj. */
+.cas__scena,
+.green__scena {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(20px, 2.4vw, 32px);
+  background:
+    radial-gradient(120% 80% at 50% 108%, #4a1b06 0%, rgba(74, 27, 6, 0) 62%),
+    radial-gradient(90% 70% at 50% -10%, #2a1d16 0%, rgba(42, 29, 22, 0) 70%),
+    #120e0b;
+  isolation: isolate;
+}
+
+.cas__scena canvas,
+.green__scena canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.scena--pripravena canvas { opacity: 1; }
+
+/* Záře za kartami je rozmazané HTML, ne bloom ve WebGL: stojí nula. */
+.scena__zare {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 56%;
+  width: min(70%, 640px);
+  aspect-ratio: 1.6;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(248, 134, 8, .55), rgba(192, 67, 9, .25) 55%, rgba(192, 67, 9, 0));
+  filter: blur(40px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Zrnitost, ať deska nepůsobí jako čistá digitální plocha. */
+.cas__scena::after,
+.green__scena::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Bez WebGL nebo s omezeným pohybem zůstávají původní mřížky. */
+.cas:not(.cas--3d) .cas__scena,
+.cas:not(.cas--3d) .cas__rok,
+.cas:not(.cas--3d) .cas__popis,
+.cas:not(.cas--3d) .cas__osa,
+.cas:not(.cas--3d) .cas__napoveda,
+.green:not(.green--3d) .green__scena { display: none; }
+
+/* Ve 3D režimu zůstávají obrázky v DOM pro čtečky, ale nejsou vidět. */
+.cas--3d .pruvod,
+.green--3d .bento {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Jak šel čas? — prstenec ------------------------------------------------ */
+.cas--3d {
+  position: relative;
+  /* Deset snímků, každý dostane zhruba půl obrazovky scrollu. */
+  height: 560svh;
+}
+
+.cas--3d .cas__pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr);
+  gap: clamp(24px, 3.4vw, 56px);
+  align-items: center;
+  padding-block: 28px;
+}
+
+.cas--3d .cas__scena { height: 100%; max-height: 820px; }
+
+.cas__text { display: grid; align-content: center; }
+
+.cas__rok {
+  margin: clamp(14px, 3vh, 34px) 0 0;
+  overflow: hidden;
+  font-family: var(--hero-face);
+  font-size: clamp(86px, 11vw, 196px);
+  line-height: 1;
+  letter-spacing: -.01em;
+  color: var(--orange-600);
+  /* Číslice mají stejnou šířku, ať rok při výměně neposkakuje do stran. */
+  font-variant-numeric: tabular-nums;
+}
+
+.cas__rok-hodnota { display: inline-block; }
+
+.cas__rok-hodnota.jede-nahoru { animation: rok-nahoru .55s cubic-bezier(.16, 1, .3, 1); }
+.cas__rok-hodnota.jede-dolu { animation: rok-dolu .55s cubic-bezier(.16, 1, .3, 1); }
+
+@keyframes rok-nahoru { from { transform: translateY(70%); opacity: 0; } }
+@keyframes rok-dolu { from { transform: translateY(-70%); opacity: 0; } }
+
+.cas__popis {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cas__osa {
+  margin: clamp(20px, 3.4vh, 34px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 5px;
+  max-width: 360px;
+}
+
+.cas__osa li {
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: #e6dfd7;
+  transition: background .4s, transform .4s cubic-bezier(.16, 1, .3, 1);
+}
+
+.cas__osa li span { display: none; }
+.cas__osa li.je-prosly { background: #f0b48a; }
+.cas__osa li.je-aktivni { background: var(--orange-600); transform: scaleY(1.8); }
+
+.cas__napoveda {
+  margin: clamp(18px, 3vh, 30px) 0 0;
+  font-size: 13px;
+  color: #8a7f74;
+}
+
+.cas__scena canvas { cursor: default; }
+.cas__scena.ukazuje-kartu canvas { cursor: zoom-in; }
+
+@media (max-width: 900px) {
+  .cas--3d { height: 520svh; }
+
+  .cas--3d .cas__pin {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 14px;
+    padding-block: 20px 16px;
+  }
+
+  .cas--3d .blok__hlava { margin-bottom: 0; }
+  .cas--3d .blok__hlava p { display: none; }
+
+  .cas__text {
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    column-gap: 18px;
+  }
+
+  .cas__text .blok__hlava { grid-column: 1 / -1; }
+  .cas__rok { margin: 6px 0 0; font-size: clamp(56px, 17vw, 86px); }
+  .cas__popis { margin: 0 0 12px; }
+  .cas__osa { grid-column: 1 / -1; margin-top: 10px; max-width: none; }
+  .cas__napoveda { display: none; }
+}
+
+/* Green Line — pětka na ledě ------------------------------------------------ */
+.green__scena {
+  aspect-ratio: 16 / 8.4;
+  max-height: 84svh;
+  width: 100%;
+}
+
+.green__scena canvas { cursor: default; }
+.green__scena.ukazuje-kartu canvas { cursor: zoom-in; }
+
+.green__stitky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.green__stitek {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .86);
+  background: rgba(18, 14, 11, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .5s, background .3s, border-color .3s, color .3s;
+  will-change: transform;
+}
+
+.scena--pripravena .green__stitek { opacity: 1; }
+
+.green__stitek b { font-weight: 700; }
+
+.green__stitek.je-zvednuty {
+  color: var(--paper);
+  border-color: transparent;
+  background: var(--orange-600);
+}
+
+.green__napoveda {
+  position: absolute;
+  left: clamp(16px, 2vw, 26px);
+  bottom: clamp(14px, 2vw, 22px);
+  margin: 0;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, .55);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .green__scena { aspect-ratio: 4 / 5; max-height: 78svh; }
+  .green__napoveda { display: none; }
+  /* Na úzké desce by se dlouhé popisky obránců překryly. */
+  .green__stitek-nazev { display: none; }
+}
+
+/* Thumbnaily ----------------------------------------------------------------- */
+.nahledy__stul {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(170px, 18vw, 240px);
+  grid-template-rows: auto auto;
+  gap: clamp(14px, 1.6vw, 22px);
+}
+
+/* Plátno je designérova podložka: tečkovaný rastr, na kterém náhled roste. */
+.nahledy__platno {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: clamp(18px, 2vw, 26px);
+  background-color: var(--bone);
+  background-image: radial-gradient(circle, #d6cdc2 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+
+.nahledy__karta {
+  --meritko: .3;
+  margin: 0;
+  width: var(--sirka-plna, 900px);
+  transform: scale(var(--meritko));
+  transform-origin: center;
+  will-change: transform;
+}
+
+.nahledy__karta img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  /* YouTube zaobluje náhled stejně v každé velikosti, takže se poloměr
+     dělí měřítkem. */
+  border-radius: calc(10px / var(--meritko));
+  box-shadow: 0 calc(10px / var(--meritko)) calc(26px / var(--meritko)) rgba(60, 18, 0, .16);
+  cursor: zoom-in;
+}
+
+/* Před a po: canvas s původní fotkou leží přesně nad hotovým náhledem. */
+.nahledy__karta { position: relative; }
+
+.nahledy__stetec {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: calc(10px / var(--meritko));
+  cursor: crosshair;
+}
+
+.nahledy__stetec-napoveda {
+  position: absolute;
+  right: clamp(14px, 1.6vw, 22px);
+  top: clamp(14px, 1.6vw, 20px);
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+}
+
+.nahledy__platno:has(.ma-pred) .nahledy__stetec-napoveda { opacity: 1; }
+
+.nahledy__meta {
+  display: grid;
+  gap: calc(7px / var(--meritko));
+  margin-top: calc(10px / var(--meritko));
+  opacity: clamp(0, (.72 - var(--meritko)) * 6, 1);
+}
+
+.nahledy__meta span {
+  height: calc(9px / var(--meritko));
+  border-radius: 99px;
+  background: #ddd5cb;
+}
+
+.nahledy__meta span:first-child { width: 88%; }
+.nahledy__meta span:last-child { width: 54%; background: #e7e0d8; }
+
+.nahledy__mira {
+  position: absolute;
+  left: clamp(14px, 1.6vw, 22px);
+  top: clamp(12px, 1.4vw, 18px);
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.nahledy__px {
+  font-family: var(--hero-face);
+  font-size: 22px;
+  letter-spacing: 0;
+  color: var(--orange-600);
+  font-variant-numeric: tabular-nums;
+}
+
+.nahledy__ovladani {
+  display: grid;
+  gap: 14px;
+}
+
+.nahledy__posuvnik {
+  display: grid;
+  gap: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.nahledy__posuvnik input {
+  --plneni: 0%;
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.nahledy__posuvnik input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--orange-600) var(--plneni), #e3dcd3 var(--plneni));
+}
+
+.nahledy__posuvnik input::-moz-range-track {
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--orange-600) var(--plneni), #e3dcd3 var(--plneni));
+}
+
+.nahledy__posuvnik input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -9px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 2px var(--orange-600), 0 6px 14px rgba(60, 18, 0, .22);
+  transition: transform .25s;
+}
+
+.nahledy__posuvnik input::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 2px var(--orange-600), 0 6px 14px rgba(60, 18, 0, .22);
+}
+
+.nahledy__posuvnik input:active::-webkit-slider-thumb { transform: scale(1.15); }
+
+.nahledy__zastavky {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nahledy__zastavky button,
+.nahledy__vyber button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.nahledy__zastavky button {
+  padding: 8px 14px;
+  border: 1px solid #ddd6cd;
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: border-color .3s, color .3s, background .3s;
+}
+
+.nahledy__zastavky button:hover { border-color: var(--orange-600); color: var(--ink); }
+
+.nahledy__zastavky button.je-aktivni {
+  border-color: transparent;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.nahledy__vyber {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.nahledy__vyber button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: none;
+  opacity: .55;
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  transition: opacity .35s, outline-color .35s, transform .45s cubic-bezier(.22, 1.4, .36, 1);
+}
+
+.nahledy__vyber img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.nahledy__vyber button:hover { opacity: .85; transform: translateX(-3px); }
+
+.nahledy__vyber button[aria-pressed="true"] {
+  opacity: 1;
+  outline-color: var(--orange-600);
+}
+
+@media (max-width: 900px) {
+  .nahledy__stul { grid-template-columns: 1fr; }
+  /* Údaj o velikosti dostane vlastní pruh nad náhledem. */
+  .nahledy__platno { aspect-ratio: 4 / 3; padding-top: 34px; }
+
+  .nahledy__vyber {
+    grid-column: 1;
+    grid-row: auto;
+    grid-auto-flow: column;
+    grid-auto-columns: 128px;
+    overflow-x: auto;
+    padding: 4px 4px 10px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .nahledy__vyber li { scroll-snap-align: start; }
+}
+
+/* Světlo pod kurzorem --------------------------------------------------------- */
+/* Karta pod kurzorem dostane měkký odlesk a mírně se natočí za myší. */
+.svetlo {
+  --mx: 50%;
+  --my: 50%;
+  --rx: 0deg;
+  --ry: 0deg;
+  transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+}
+
+.svetlo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx) var(--my), rgba(255, 220, 180, .22), rgba(255, 220, 180, 0) 60%);
+  opacity: 0;
+  transition: opacity .45s;
+}
+
+.svetlo:hover::after { opacity: 1; }
+
+[data-galerie] figure img,
+.posledni { cursor: zoom-in; }
+.posledni { cursor: pointer; }
+
+/* Lightbox --------------------------------------------------------------- */
+.lightbox {
+  width: 100vw;
+  max-width: none;
+  height: 100svh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.lightbox::backdrop {
+  background: rgba(12, 9, 7, .92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.lightbox[open] { display: grid; place-items: center; }
+
+.lightbox__obraz {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  animation: lightbox-in .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.lightbox__obraz img {
+  display: block;
+  max-width: min(90vw, 1400px);
+  max-height: 82svh;
+  object-fit: contain;
+  border-radius: 14px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, .5);
+}
+
+.lightbox__obraz.meni img { animation: lightbox-in .4s cubic-bezier(.16, 1, .3, 1); }
+
+@keyframes lightbox-in { from { opacity: 0; transform: scale(.95); } }
+
+.lightbox figcaption {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .72);
+}
+
+.lightbox__zavrit,
+.lightbox__sipka {
+  position: fixed;
+  display: grid;
+  place-content: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  color: var(--paper);
+  cursor: pointer;
+  transition: background .3s, transform .45s cubic-bezier(.22, 1.4, .36, 1);
+}
+
+.lightbox__zavrit svg,
+.lightbox__sipka svg { width: 22px; height: 22px; }
+
+.lightbox__zavrit:hover,
+.lightbox__sipka:hover { background: var(--orange-600); transform: scale(1.06); }
+
+.lightbox__zavrit { top: 20px; right: 20px; }
+.lightbox__sipka { top: 50%; margin-top: -26px; }
+.lightbox__sipka--zpet { left: 20px; }
+.lightbox__sipka--dal { right: 20px; }
+
+.lightbox__pocet {
+  position: fixed;
+  left: 24px;
+  top: 30px;
+  margin: 0;
+  font-family: var(--hero-face);
+  font-size: 18px;
+  letter-spacing: .04em;
+  color: rgba(255, 255, 255, .72);
+}
+
+.lightbox--sam .lightbox__sipka,
+.lightbox--sam .lightbox__pocet { display: none; }
+
+@media (max-width: 720px) {
+  .lightbox__sipka { top: auto; bottom: 22px; margin-top: 0; }
+  .lightbox__obraz img { max-height: 72svh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svetlo { transform: none; transition: none; }
+  .lightbox__obraz, .lightbox__obraz.meni img,
+  .cas__rok-hodnota.jede-nahoru, .cas__rok-hodnota.jede-dolu { animation: none; }
+}
+
+/* Video ------------------------------------------------------------------ */
+.video__prehravac {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: clamp(18px, 2.2vw, 30px);
+  background: var(--ink);
+  box-shadow: 0 40px 80px -30px rgba(60, 18, 0, .45);
+}
+
+.video__prehravac iframe,
+.video__spust {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video__spust {
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--paper);
+}
+
+.video__spust img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.01);
+  transition: transform 1.2s cubic-bezier(.16, 1, .3, 1), filter .6s;
+}
+
+.video__spust::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 7, 5, .7), rgba(10, 7, 5, 0) 45%);
+  pointer-events: none;
+}
+
+.video__spust:hover img { transform: scale(1.05); filter: saturate(1.1); }
+
+.video__tlacitko {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-content: center;
+  width: clamp(72px, 9vw, 116px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--orange-600);
+  box-shadow: 0 0 0 0 rgba(248, 134, 8, .5), 0 20px 40px rgba(0, 0, 0, .35);
+  transform: translate(-50%, -50%);
+  transition: transform .5s cubic-bezier(.22, 1.4, .36, 1), background .3s;
+  animation: video-puls 2.6s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+
+.video__tlacitko svg { width: clamp(28px, 3.4vw, 44px); height: clamp(28px, 3.4vw, 44px); margin-left: 8%; }
+
+.video__spust:hover .video__tlacitko {
+  transform: translate(-50%, -50%) scale(1.08);
+  background: var(--orange-500);
+}
+
+@keyframes video-puls {
+  0% { box-shadow: 0 0 0 0 rgba(248, 134, 8, .45), 0 20px 40px rgba(0, 0, 0, .35); }
+  70%, 100% { box-shadow: 0 0 0 26px rgba(248, 134, 8, 0), 0 20px 40px rgba(0, 0, 0, .35); }
+}
+
+.video__info {
+  position: absolute;
+  z-index: 1;
+  left: clamp(16px, 2.4vw, 32px);
+  bottom: clamp(14px, 2.2vw, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.video__info span {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: rgba(18, 14, 11, .6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.video__tagy { margin-top: 18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .video__tlacitko { animation: none; }
+  .video__spust img { transition: none; }
+}

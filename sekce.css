@@ -1,0 +1,888 @@
+/* Zbytek stránky pod herem. Tokeny přicházejí ze styles.css. */
+
+/* Sekce -------------------------------------------------------------- */
+/* Obsah drží míru 1280 px a stojí na středu stránky, ale uvnitř zůstává
+   zarovnaný vlevo. Proto to řeší odsazení sekce, ne centrování dětí. */
+.sekce,
+.paticka {
+  padding-inline: max(var(--rail), calc((100% - 1280px) / 2));
+}
+
+.sekce { padding-block: clamp(64px, 11vh, 140px); }
+
+/* Kotvy z menu nechají nad sekcí kousek vzduchu. */
+.sekce, .blok { scroll-margin-top: 24px; }
+
+.sekce--svetla { background: var(--paper); color: var(--ink); }
+.sekce--tmava  { background: var(--ink);   color: var(--paper); }
+
+.sekce--oranzova {
+  color: var(--paper);
+  background: linear-gradient(138deg, #7d1d07 0%, #a83709 42%, #c84803 68%, #e2660a 100%);
+}
+
+.sekce__hlava { max-width: 62ch; }
+
+.stitek {
+  margin: 0 0 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--orange-600);
+}
+
+.sekce--tmava .stitek { color: var(--orange-400); }
+.sekce--oranzova .stitek { color: rgba(255, 255, 255, .72); }
+
+.sekce__nadpis {
+  margin: 0;
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: clamp(34px, 4.6vw, 70px);
+  /* Anton sází háčky vysoko nad verzálku; při menším prokladu zasahují
+     do řádku nad sebou. */
+  line-height: 1.24;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+
+.sekce__lede {
+  margin: clamp(18px, 2.6vh, 30px) 0 0;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 54ch;
+}
+
+.sekce--tmava .sekce__lede,
+.sekce--oranzova .sekce__lede { color: rgba(255, 255, 255, .78); }
+
+/* Obory ------------------------------------------------------------- */
+/* Dlaždice s prosvítající prací: v klidu ztlumená černobílá, pod kurzorem
+   se rozsvítí, zbarví a vysune popis. */
+.obory {
+  margin: clamp(24px, 3.5vh, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 1.2vw, 14px);
+}
+
+.obory li {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.obory img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Práce má být vidět, ne tušena: snímky jedou v plné barvě a velikosti. */
+  object-position: 50% 40%;
+  transform: scale(1.02);
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+/* Clona drží jen spodní pruh, kde sedí popisek. Přes celou dlaždici by
+   zase zhasla fotku. */
+.obory li::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 62%;
+  background: linear-gradient(to top,
+    rgba(10, 7, 5, .82) 0%,
+    rgba(10, 7, 5, .58) 38%,
+    rgba(10, 7, 5, .22) 72%,
+    rgba(10, 7, 5, 0) 100%);
+}
+
+.obory__text {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(16px, 1.6vw, 22px);
+  color: var(--paper);
+}
+
+.obory h3 {
+  margin: 0 0 7px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .55);
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: clamp(21px, 2.2vw, 32px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Popis se rozbaluje přes grid-template-rows (0fr na 1fr). Animovat
+   max-height by znamenalo přepočítávat layout na každém snímku. */
+.obory__popis {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows .5s cubic-bezier(.16, 1, .3, 1), opacity .4s;
+}
+
+.obory__popis > p {
+  margin: 0;
+  overflow: hidden;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, .92);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .6);
+}
+
+.obory li:hover img,
+.obory li:focus-within img { transform: scale(1.07); }
+
+.obory li:hover .obory__popis,
+.obory li:focus-within .obory__popis { grid-template-rows: 1fr; opacity: 1; }
+
+/* Časová osa --------------------------------------------------------- */
+.osa {
+  margin: clamp(36px, 5.5vh, 64px) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.osa {
+  position: relative;
+  max-width: 760px;
+  margin-inline: 0;
+}
+
+/* Linka osy vede za body, proto leží pod nimi. */
+.osa::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 5px;
+  width: 1px;
+  background: rgba(255, 255, 255, .18);
+}
+
+.osa li {
+  position: relative;
+  padding: 0 0 clamp(26px, 3.6vh, 40px) clamp(26px, 2.4vw, 38px);
+}
+
+.osa li:last-child { padding-bottom: 0; }
+
+.osa li::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 0;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--orange-500);
+  box-shadow: 0 0 0 4px var(--ink);
+}
+
+.osa__rok {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--hero-face);
+  font-size: 15px;
+  letter-spacing: .04em;
+  color: var(--orange-400);
+}
+
+.osa h3 {
+  margin: 0 0 5px;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.osa p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, .66);
+  max-width: 58ch;
+}
+
+/* Projekty ----------------------------------------------------------- */
+.tagy {
+  margin: clamp(20px, 3vh, 30px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tagy li {
+  padding: 7px 14px;
+  border: 1px solid #ddd6cd;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.tagy li:first-child {
+  border-color: transparent;
+  background: var(--orange-600);
+  color: var(--paper);
+}
+
+
+
+
+/* Patička ------------------------------------------------------------ */
+.paticka {
+  display: grid;
+  gap: 10px;
+  padding-block: clamp(48px, 8vh, 90px) clamp(30px, 5vh, 48px);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.paticka__jmeno {
+  margin: 0;
+  font-family: var(--hero-face);
+  font-size: clamp(38px, 8vw, 110px);
+  line-height: .92;
+  text-transform: uppercase;
+}
+
+.paticka__role {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .55);
+}
+
+.paticka__site {
+  margin-top: clamp(20px, 3vh, 34px);
+  display: flex;
+  gap: 22px;
+  font-size: 14px;
+}
+
+.paticka__site a {
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, .3);
+  transition: border-color .3s;
+}
+
+.paticka__site a:hover { border-color: var(--orange-400); }
+
+.paticka__copy {
+  margin: clamp(18px, 3vh, 30px) 0 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, .4);
+}
+
+/* Nájezd při scrollu -------------------------------------------------- */
+/* Nájezd: prolnutí se zdvihem. --nastup nastavuje JS sousedům ve stejné
+   skupině, takže nastupují po sobě, ne naráz. */
+.najede {
+  --nastup: 0ms;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity .8s cubic-bezier(.16, 1, .3, 1) var(--nastup),
+              transform .8s cubic-bezier(.16, 1, .3, 1) var(--nastup);
+}
+
+.najede.je-videt { opacity: 1; transform: none; }
+
+/* Nadpis se odhrne maskou zleva doprava. */
+.odhrne {
+  clip-path: inset(0 100% -0.25em 0);
+  transition: clip-path 1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.odhrne.je-videt { clip-path: inset(0 0 -0.25em 0); }
+
+@media (max-width: 1040px) {
+  .obory { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (hover: none) {
+  /* Na dotyku není co najet, takže je popis vidět rovnou. */
+  .obory__popis { grid-template-rows: 1fr; opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .obory { grid-template-columns: 1fr; }
+  .osa li { grid-template-columns: 1fr; gap: 6px; }
+  .formular { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .najede { opacity: 1; transform: none; transition: none; }
+  .odhrne { clip-path: none; transition: none; }
+}
+
+/* Portfolio ----------------------------------------------------------- */
+.blok { margin-top: clamp(52px, 9vh, 110px); }
+
+/* Popis stojí pod nadpisem, ne vedle něj: vedle by každý začínal jinde,
+   podle toho, jak dlouhý je nadpis. */
+.blok__hlava {
+  margin-bottom: clamp(18px, 2.6vh, 30px);
+}
+
+.blok__hlava h3 {
+  margin: 0;
+  font-family: var(--hero-face);
+  font-weight: 400;
+  font-size: clamp(26px, 3vw, 44px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.blok__hlava p {
+  margin: 10px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 58ch;
+}
+
+/* Společný vzhled dlaždic napříč všemi třemi mřížkami. */
+.pruvod figure,
+.bento figure,
+.mrizka figure,
+.znacky figure {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--bone);
+}
+
+.pruvod img,
+.bento img,
+.mrizka img,
+.znacky img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.pruvod figure:hover img,
+.bento figure:hover img,
+.mrizka figure:hover img { transform: scale(1.04); }
+
+/* 1. Vodorovný průvod, jako se carousel čte na Instagramu. */
+.pruvod {
+  display: flex;
+  gap: clamp(12px, 1.6vw, 20px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  margin: 0 calc(-1 * var(--rail));
+  padding: 0 var(--rail) 14px;
+  scrollbar-width: thin;
+  scrollbar-color: #d8d1c8 transparent;
+}
+
+.pruvod:focus-visible { outline: 2px solid var(--orange-600); outline-offset: 4px; }
+
+.pruvod figure {
+  flex: 0 0 auto;
+  width: clamp(178px, 19vw, 258px);
+  aspect-ratio: 4 / 5;
+  scroll-snap-align: start;
+}
+
+/* 2. Bento: pět dílů pětky, pět buněk, žádná prázdná.
+   Snímky jsou na výšku (4:5), takže i buňky musí mít ten poměr — jinak
+   `cover` uřízne právě ten titulek, kvůli kterému se na ně člověk dívá.
+   Čtyři sloupce krát dva řádky v poměru 1,6 dají každé buňce 4:5. */
+.bento {
+  display: grid;
+  gap: clamp(10px, 1.4vw, 18px);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  aspect-ratio: 1.6;
+}
+
+.bento__velka { grid-column: span 2; grid-row: span 2; }
+
+/* 3. Pravidelná mřížka pro náhledy, které jsou samy o sobě obrazovky. */
+.mrizka {
+  display: grid;
+  gap: clamp(10px, 1.4vw, 18px);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.mrizka figure { aspect-ratio: 16 / 9; }
+
+/* 4. Značky na tmavém podkladu, jinak splynou s papírem. */
+.blok--tmavy {
+  padding: clamp(28px, 4vw, 52px);
+  border-radius: 24px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.blok--tmavy .blok__hlava p { color: rgba(255, 255, 255, .62); }
+
+.znacky {
+  display: grid;
+  gap: clamp(10px, 1.4vw, 18px);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.znacky figure { background: rgba(255, 255, 255, .06); }
+
+.znacky figure img { aspect-ratio: 1 / 1; }
+
+.znacky img {
+  height: auto;
+  object-fit: contain;
+  padding: clamp(14px, 2vw, 26px);
+}
+
+@media (max-width: 900px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: none;
+    aspect-ratio: auto;
+  }
+  .bento figure { aspect-ratio: 4 / 5; }
+  .bento__velka { grid-column: span 2; grid-row: span 1; aspect-ratio: 8 / 5; }
+  .mrizka { grid-template-columns: repeat(2, 1fr); }
+  .znacky { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .bento, .mrizka { grid-template-columns: 1fr; }
+  .bento__velka { grid-column: span 1; aspect-ratio: 4 / 5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pruvod figure:hover img,
+  .bento figure:hover img,
+  .mrizka figure:hover img { transform: none; }
+  .pruvod img, .bento img, .mrizka img, .znacky img { transition: none; }
+}
+
+/* Kontakt ------------------------------------------------------------- */
+.kontakt {
+  margin-top: clamp(40px, 6vh, 74px);
+  display: grid;
+  gap: clamp(28px, 3.4vw, 52px);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  align-items: start;
+}
+
+.formular {
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.formular label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.formular .siroke { grid-column: 1 / -1; }
+
+.formular input,
+.formular textarea {
+  font: inherit;
+  font-size: 15px;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+  padding: 14px 16px;
+  border: 1px solid #ded7ce;
+  border-radius: 12px;
+  background: var(--paper);
+  resize: vertical;
+  transition: border-color .3s;
+}
+
+.formular input:focus,
+.formular textarea:focus {
+  outline: none;
+  border-color: var(--orange-600);
+  box-shadow: 0 0 0 3px rgba(226, 86, 13, .16);
+}
+
+/* Placeholder musí projít kontrastem stejně jako zbytek textu. */
+.formular input::placeholder,
+.formular textarea::placeholder { color: #8a7f74; }
+
+.btn--tmavy {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 0;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Vizitka je vytažená nad formulář až k textu pod nadpisem, aby pravý
+   sloupec nezačínal opticky o půl obrazovky níž než levý. */
+.vizitka {
+  margin-top: calc(-1 * clamp(150px, 27vh, 320px));
+  padding: clamp(24px, 3vw, 38px);
+  border-radius: 20px;
+  background: var(--bone);
+}
+
+.vizitka__jmeno {
+  margin: 0;
+  font-family: var(--hero-face);
+  font-size: clamp(26px, 2.6vw, 38px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.vizitka__role {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--orange-600);
+}
+
+.spojeni {
+  margin: clamp(22px, 3.4vh, 34px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: clamp(14px, 2vh, 20px);
+}
+
+.spojeni li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 14px;
+  align-items: center;
+}
+
+.spojeni__ikona {
+  grid-row: span 2;
+  display: grid;
+  place-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--orange-600);
+}
+
+.spojeni__ikona svg { width: 20px; height: 20px; }
+
+.spojeni__co {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.spojeni__hodnota {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+  justify-self: start;
+  transition: border-color .3s;
+}
+
+.spojeni__hodnota:hover { border-color: var(--orange-600); }
+
+.vizitka__stav {
+  margin: clamp(22px, 3.4vh, 32px) 0 0;
+  padding-top: clamp(16px, 2.4vh, 22px);
+  border-top: 1px solid #ddd6cd;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 980px) {
+  .kontakt { grid-template-columns: 1fr; }
+  /* Vytažení vizitky nahoru dává smysl jen vedle formuláře; pod ním by ho
+     překrylo. */
+  .vizitka { margin-top: 0; }
+}
+
+@media (max-width: 560px) {
+  .formular { grid-template-columns: 1fr; }
+}
+
+
+/* Přístupnost ---------------------------------------------------------- */
+/* Viditelné zaměření na všem, co jde ovládat klávesnicí. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sekce--tmava a:focus-visible,
+.sekce--oranzova a:focus-visible,
+.paticka a:focus-visible,
+.blok--tmavy a:focus-visible { outline-color: var(--paper); }
+
+/* Bez zpoždění dvojitým ťuknutím na dotykových zařízeních. */
+a, button, input, textarea { touch-action: manipulation; }
+
+/* Portréty v sekcích --------------------------------------------------- */
+/* Snímek stojí vedle nadpisu, ne vedle mřížky: mřížka by se po něm natáhla
+   do výšky a buňky by zely prázdnotou. */
+.predstaveni {
+  display: grid;
+  gap: clamp(24px, 3vw, 52px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 200px);
+  align-items: center;
+}
+
+.predstaveni .sekce__hlava { max-width: none; }
+
+/* Mírný ořez na 3:4 místo plných 9:16: jinak snímek sám vytlačí sekci
+   přes celou obrazovku. Těžiště je na obličeji, takže se neuřízne. */
+.predstaveni__foto img {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: 50% 26%;
+}
+
+
+.cesta__foto {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.cesta__foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Osa a portrét vedle sebe; snímek se drží při scrollu v dohledu. */
+.cesta {
+  margin-top: clamp(36px, 5.5vh, 64px);
+  display: grid;
+  gap: clamp(26px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, .46fr);
+  align-items: start;
+}
+
+.cesta .osa { margin: 0; }
+
+.cesta__foto {
+  position: sticky;
+  top: clamp(88px, 12vh, 130px);
+}
+
+
+@media (max-width: 900px) {
+  .cesta { grid-template-columns: 1fr; }
+  .cesta__foto { position: static; max-width: 420px; }
+  .vyzva { grid-template-columns: 1fr; }
+}
+
+
+/* Oranžové dosvity ----------------------------------------------------- */
+/* Hero je oranžové; světlé sekce po něm nesou jeho ozvěnu jako měkké
+   záře u okrajů. Leží pod obsahem a nereagují na myš. */
+.sekce--svetla {
+  position: relative;
+  isolation: isolate;
+  /* clip, ne hidden: hidden dělá ze sekce scroll kontejner a sticky
+     prvky uvnitř (portrét v Cestě, 3D prstenec) by pak nestály. */
+  overflow: clip;
+}
+
+.sekce--svetla::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 62vw;
+  height: 62vw;
+  max-width: 900px;
+  max-height: 900px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(226, 86, 13, .40) 0%,
+    rgba(226, 86, 13, .18) 40%,
+    rgba(226, 86, 13, 0) 72%);
+}
+
+#o-mne::before { top: -26%; right: -12%; }
+#prace::before { bottom: -20%; left: -18%; }
+
+#kontakt::before {
+  top: 50%;
+  right: -16%;
+  transform: translateY(-50%);
+  background: radial-gradient(circle,
+    rgba(248, 134, 8, .42) 0%,
+    rgba(226, 86, 13, .20) 44%,
+    rgba(226, 86, 13, 0) 72%);
+}
+
+/* Druhý, menší dosvit na opačné straně, ať pozadí nepůsobí jednostranně. */
+#prace::after,
+#kontakt::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  width: 34vw;
+  height: 34vw;
+  max-width: 480px;
+  max-height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(168, 47, 7, .30) 0%,
+    rgba(168, 47, 7, 0) 70%);
+}
+
+#prace::after { top: -8%; right: -6%; }
+#kontakt::after { bottom: -14%; left: -10%; }
+
+/* Tmavá sekce dostane jen náznak u horní hrany, aby navázala na hero. */
+.sekce--tmava {
+  position: relative;
+  isolation: isolate;
+  /* clip, ne hidden: hidden dělá ze sekce scroll kontejner a sticky
+     prvky uvnitř (portrét v Cestě, 3D prstenec) by pak nestály. */
+  overflow: clip;
+}
+
+/* Záře u horní hrany. Gradient musí doznít uvnitř boxu, jinak se na jeho
+   okraji objeví ostrý vodorovný řez. */
+.sekce--tmava::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  inset: 0;
+  background: radial-gradient(68% 46% at 74% 0%,
+    rgba(225, 101, 11, .42) 0%,
+    rgba(225, 101, 11, .16) 40%,
+    rgba(225, 101, 11, 0) 72%);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .sekce--svetla::before,
+  .sekce--svetla::after,
+  .sekce--tmava::before { display: none; }
+}
+
+/* Závěrečná výzva ------------------------------------------------------ */
+.vyzva {
+  display: grid;
+  gap: clamp(30px, 4vw, 68px);
+  /* Panel volby potřebuje víc místa než text vedle něj. */
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
+  align-items: center;
+}
+
+.vyzva .sekce__nadpis { text-wrap: balance; }
+.vyzva .sekce__lede { max-width: 42ch; }
+
+.btn--svetly {
+  margin-top: clamp(24px, 3.6vh, 40px);
+  background: var(--paper);
+  color: var(--orange-700);
+}
+
+@media (max-width: 1000px) {
+  .vyzva { grid-template-columns: 1fr; }
+}
+
+/* Stavy formuláře ------------------------------------------------------ */
+/* Past na roboty: člověk ji nevidí, skript ji vyplní. */
+.pastnabot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.hlaska {
+  grid-column: 1 / -1;
+  margin: 0;
+  min-height: 1.4em;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hlaska--ok { color: #1f7a41; }
+.hlaska--chyba { color: #a3320c; }
+
+.btn[disabled] {
+  opacity: .72;
+  cursor: progress;
+}
+
+/* Tlačítko při odesílání ------------------------------------------------ */
+/* Šipka ustoupí točícímu se kolečku, po odeslání fajfce. */
+.btn--pracuje svg,
+.btn--hotovo svg { display: none; }
+
+.btn--pracuje::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: tocise .7s linear infinite;
+}
+
+@keyframes tocise { to { transform: rotate(1turn); } }
+
+.btn--hotovo::after {
+  content: "";
+  width: 13px;
+  height: 8px;
+  border: 2px solid currentColor;
+  border-top: 0;
+  border-right: 0;
+  transform: rotate(-45deg) translate(1px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn--pracuje::after { animation: none; }
+}

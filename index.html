@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Karel Drexler - Design. Video. Web. AI.</title>
+<meta name="description" content="Karel Drexler: grafika, střih, weby a AI. Vizuály pro Deník Hokeje a značky, které chtějí být vidět.">
+<meta name="theme-color" content="#a82f07">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Karel Drexler - Design. Video. Web. AI.">
+<meta property="og:description" content="Grafika, střih, weby a AI. Vizuály pro Deník Hokeje a značky, které chtějí být vidět.">
+<meta property="og:image" content="assets/img/og.jpg">
+<meta property="og:locale" content="cs_CZ">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="assets/img/hero-charlie.webp" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="sekce.css">
+<link rel="stylesheet" href="scena.css">
+<link rel="stylesheet" href="strih.css">
+<link rel="stylesheet" href="export.css">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js" } }
+</script>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__brand" href="#">
+    <span class="nav__mark" aria-hidden="true"></span>
+    Drexler
+  </a>
+  <nav class="nav__links">
+    <a href="#prace">Portfolio</a>
+    <a href="#o-mne">O mně</a>
+    <a href="#sluzby">Služby</a>
+    <a href="#kontakt">Kontakt</a>
+  </nav>
+  <button class="nav__burger" type="button" aria-label="Otevřít menu" aria-expanded="false" aria-controls="menu">
+    <span></span><span></span>
+  </button>
+</header>
+
+<!-- Celoobrazovkové menu. Burger ho otevírá na mobilu i na desktopu. -->
+<div class="menu" id="menu" hidden>
+  <nav class="menu__odkazy" aria-label="Hlavní">
+    <a href="#o-mne"><span class="menu__cislo">01</span><span class="menu__slovo">O mně</span></a>
+    <a href="#cesta"><span class="menu__cislo">02</span><span class="menu__slovo">Cesta</span></a>
+    <a href="#prace"><span class="menu__cislo">03</span><span class="menu__slovo">Portfolio</span></a>
+    <a href="#sluzby"><span class="menu__cislo">04</span><span class="menu__slovo">Služby</span></a>
+    <a href="#kontakt"><span class="menu__cislo">05</span><span class="menu__slovo">Kontakt</span></a>
+  </nav>
+  <div class="menu__pata">
+    <a href="mailto:drexleroutreach@gmail.com">drexleroutreach@gmail.com</a>
+    <a href="https://www.instagram.com/k_drexler_/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/karel-drexler-a0ab07300/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</div>
+
+<main>
+<section class="hero">
+  <div class="hero__warm" aria-hidden="true"></div>
+  <div class="hero__rings" aria-hidden="true"></div>
+  <div class="hero__panel" aria-hidden="true"></div>
+
+  <img class="hero__portrait" src="assets/img/hero-charlie.webp" alt="Karel Drexler" width="695" height="1130" fetchpriority="high">
+
+  <div class="hero__left">
+    <h1 class="hero__title">
+      <span class="line"><span>TVOŘÍM</span></span>
+    </h1>
+    <p class="hero__lede">
+      Design, který zaujme.<br>
+      Nápady, které spojují.
+    </p>
+    <a class="btn" href="#prace">
+      <span>Moje práce</span>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M12 4H5.5M12 4v6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <div class="trust">
+      <p class="trust__nadpis">Pracuji pro</p>
+      <ul class="trust__jmena">
+        <li>Deník Hokeje</li><li>DOQA</li><li>Offsidestore</li>
+      </ul>
+    </div>
+  </div>
+
+  <aside class="hero__right">
+    <p class="avail">K dispozici pro</p>
+    <p class="avail__what">Freelance<br>projekty</p>
+
+    <a class="posledni" href="#cas">
+      <img src="assets/img/prace/cas-00-cover.webp" alt="" width="942" height="1200" decoding="async">
+      <span class="posledni__text">
+        <span class="posledni__stitek">Nejnovější práce</span>
+        <span class="posledni__nazev">Jak šel čas?</span>
+        <span class="posledni__kde">Carousel pro Deník Hokeje</span>
+      </span>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M12 4H5.5M12 4v6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </aside>
+</section>
+
+<!-- Kdo jsem --------------------------------------------------------- -->
+<section class="sekce sekce--svetla" id="o-mne">
+  <header class="sekce__hlava">
+    <h2 class="sekce__nadpis">Student, grafik,<br>střihač a vývojář.</h2>
+    <p class="sekce__lede">
+      Student multimediální komunikace, grafik, střihač, web developer
+      a mladý podnikatel.
+    </p>
+  </header>
+
+  <ul class="obory">
+    <li>
+      <img src="assets/img/obory/design.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>Design</h3>
+        <div class="obory__popis"><p>Vizuální identita značky, tvorba a úprava brandingu.</p></div>
+      </div>
+    </li>
+    <li>
+      <img src="assets/img/obory/video.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>Video</h3>
+        <div class="obory__popis"><p>Střih, motion, produkce obsahu.</p></div>
+      </div>
+    </li>
+    <li>
+      <img src="assets/img/obory/web.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>Web</h3>
+        <div class="obory__popis"><p>Frontend, backend, UX/UI.</p></div>
+      </div>
+    </li>
+    <li>
+      <img src="assets/img/obory/ai.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>AI</h3>
+        <div class="obory__popis"><p>Automatizace a AI nástroje v praxi.</p></div>
+      </div>
+    </li>
+    <li>
+      <img src="assets/img/obory/marketing.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>Marketing</h3>
+        <div class="obory__popis"><p>Social media a obsahová strategie.</p></div>
+      </div>
+    </li>
+    <li>
+      <img src="assets/img/obory/podnikani.webp" alt="" decoding="async">
+      <div class="obory__text">
+        <h3>Podnikání</h3>
+        <div class="obory__popis"><p>Vlastní projekty a podnikání.</p></div>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- Časová osa ------------------------------------------------------- -->
+<section class="sekce sekce--tmava" id="cesta">
+  <header class="sekce__hlava">
+    <h2 class="sekce__nadpis">Kudy jsem šel.</h2>
+  </header>
+
+
+  <!-- Karel je střihač, tak jeho cesta vypadá jako střižna: projekty jsou
+       klipy na stopách a scroll táhne přehrávací hlavu přes roky. Seznam
+       pod tím zůstává pro čtečky a pro omezený pohyb. -->
+  <div class="strih" aria-hidden="true">
+    <div class="strih__pin">
+      <div class="strih__horni">
+        <div class="strih__info">
+          <p class="strih__stopa">V1 · Studium</p>
+          <h3 class="strih__nazev">Prvopočátky</h3>
+          <p class="strih__roky">2019</p>
+          <p class="strih__popis">První krůčky v designu a tvorbě obsahu, experimenty, učení se a objevování kreativity.</p>
+        </div>
+        <figure class="strih__monitor">
+          <img src="assets/img/portret-zrcadlo.webp" alt="" decoding="async">
+          <span class="strih__program">Program</span>
+          <span class="strih__tc">00:00:00:00</span>
+          <figcaption class="strih__titulek">
+            <span class="strih__titulek-jmeno">Karel Drexler</span>
+            <span class="strih__titulek-role">Prvopočátky</span>
+          </figcaption>
+        </figure>
+      </div>
+      <div class="strih__osa" style="--zacatek:2019;--konec:2027;--ted:2026.76">
+        <div class="strih__pravitko"><span class="strih__jmenovka"></span><div class="strih__roky-osy"><span style="--rok:2019">2019</span><span style="--rok:2020">2020</span><span style="--rok:2021">2021</span><span style="--rok:2022">2022</span><span style="--rok:2023">2023</span><span style="--rok:2024">2024</span><span style="--rok:2025">2025</span><span style="--rok:2026">2026</span><span class="strih__dnes" style="--rok:2026.76">dnes</span></div></div>
+        <div class="strih__stopy">
+          <div class="strih__radek"><span class="strih__jmenovka"><b>V1</b> Studium</span><div class="strih__draha"><button type="button" class="strih__klip" style="--od:2019.0;--do:2022.0;--obr:url('assets/img/obory/design.webp')" data-od="2019.0" data-do="2022.0" data-stopa="V1 · Studium" data-roky="2019" data-popis="První krůčky v designu a tvorbě obsahu, experimenty, učení se a objevování kreativity." tabindex="-1"><span>Prvopočátky</span></button><button type="button" class="strih__klip" style="--od:2022.0;--do:2026.76;--obr:url('assets/img/obory/video.webp')" data-od="2022.0" data-do="2026.76" data-stopa="V1 · Studium" data-roky="od 2022" data-popis="Studium multimediální komunikace: design, video, média a technologie." tabindex="-1"><span>Multimediální komunikace</span></button></div></div>
+          <div class="strih__radek"><span class="strih__jmenovka"><b>V2</b> Média</span><div class="strih__draha"><button type="button" class="strih__klip" style="--od:2023.0;--do:2026.76;--obr:url('assets/img/obory/marketing.webp')" data-od="2023.0" data-do="2026.76" data-stopa="V2 · Média" data-roky="od 2023" data-popis="Grafika / sociální sítě / video / žurnalistika." tabindex="-1"><span>Deník Hokeje</span></button></div></div>
+          <div class="strih__radek"><span class="strih__jmenovka"><b>V3</b> Weby a AI</span><div class="strih__draha"><button type="button" class="strih__klip" style="--od:2025.0;--do:2026.5;--obr:url('assets/img/obory/web.webp')" data-od="2025.0" data-do="2026.5" data-stopa="V3 · Weby a AI" data-roky="2025–2026" data-popis="AI automatizace / weby / UX/UI / frontend / backend." tabindex="-1"><span>DOQA</span></button></div></div>
+          <div class="strih__radek"><span class="strih__jmenovka"><b>V4</b> Značka</span><div class="strih__draha"><button type="button" class="strih__klip" style="--od:2026.0;--do:2026.76;--obr:url('assets/img/obory/podnikani.webp')" data-od="2026.0" data-do="2026.76" data-stopa="V4 · Značka" data-roky="od 2026" data-popis="Značka / e-commerce / social media / content." tabindex="-1"><span>Offsidestore</span></button></div></div>
+          <div class="strih__radek"><span class="strih__jmenovka"><b>V5</b> Systémy</span><div class="strih__draha"><button type="button" class="strih__klip" style="--od:2026.0;--do:2026.76;--obr:url('assets/img/obory/ai.webp')" data-od="2026.0" data-do="2026.76" data-stopa="V5 · Systémy" data-roky="od 2026" data-popis="Pasivní systém na šetření času makléřům." tabindex="-1"><span>Akviziční zpracování pro realitní makléře</span></button></div></div>
+          <div class="strih__hlava"><span class="strih__hlava-rok">2019</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cesta">
+    <ol class="osa">
+    <li><span class="osa__rok">2019</span><div><h3>Prvopočátky</h3>
+      <p>První krůčky v designu a tvorbě obsahu, experimenty, učení se a objevování kreativity.</p></div></li>
+    <li><span class="osa__rok">od 2022</span><div><h3>Multimediální komunikace</h3>
+      <p>Studium multimediální komunikace: design, video, média a technologie.</p></div></li>
+    <li><span class="osa__rok">od 2023</span><div><h3>Deník Hokeje</h3>
+      <p>Grafika / sociální sítě / video / žurnalistika.</p></div></li>
+    <li><span class="osa__rok">2025-2026</span><div><h3>DOQA</h3>
+      <p>AI automatizace / weby / UX/UI / frontend / backend.</p></div></li>
+    <li><span class="osa__rok">od 2026</span><div><h3>Offsidestore</h3>
+      <p>Značka / e-commerce / social media / content.</p></div></li>
+    <li><span class="osa__rok">od 2026</span><div><h3>Akviziční zpracování pro realitní makléře</h3>
+      <p>Pasivní systém na šetření času makléřům.</p></div></li>
+    </ol>
+
+    <figure class="cesta__foto">
+      <img src="assets/img/portret-zrcadlo.webp" alt="Karel Drexler" decoding="async">
+    </figure>
+  </div>
+</section>
+
+<!-- Portfolio -------------------------------------------------------- -->
+<section class="sekce sekce--svetla" id="prace">
+  <header class="sekce__hlava">
+    <p class="stitek">Portfolio</p>
+    <h2 class="sekce__nadpis">Deník Hokeje</h2>
+    <p class="sekce__lede">
+      Hokejové médium, kde propojuji vizuální identitu s rychlým redakčním
+      provozem. Vizuály musí být čitelné během vteřiny a fungovat napříč formáty.
+    </p>
+    <ul class="tagy">
+      <li>od 2023</li><li>Sport</li><li>Média</li><li>Design</li><li>Video</li>
+    </ul>
+  </header>
+
+  <!-- Střih. Přehrávač YouTube se načte až po kliknutí; do té doby je to
+       jen Karlův vlastní náhled k tomu videu, takže stránka nic netáhne
+       a YouTube nedostane návštěvníka dřív, než o to stojí. -->
+  <article class="blok video" id="video">
+    <div class="blok__hlava">
+      <h3>Takhle vypadal hokej v 90. letech</h3>
+      <p>Střih a náhled videa pro YouTube kanál Deníku Hokeje. Archivní záběry, tempo a hudba poskládané do osmi a půl minuty.</p>
+    </div>
+    <div class="video__prehravac">
+      <button class="video__spust" type="button" data-youtube="zjmPTcanoJQ" aria-label="Přehrát video Takhle vypadal hokej v 90. letech">
+        <img src="assets/img/prace/thumb-devadesatky.webp" alt="" decoding="async">
+        <span class="video__tlacitko" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+        </span>
+        <span class="video__info" aria-hidden="true">
+          <span>Deník Hokeje</span><span>8:32</span><span>Září 2026</span>
+        </span>
+      </button>
+    </div>
+    <ul class="tagy video__tagy">
+      <li>Střih</li><li>Náhled</li><li>YouTube</li>
+    </ul>
+  </article>
+
+  <!-- Carousel je chronologie, takže ve 3D stojí jako prstenec a scroll jím
+       otáčí rok po roku. Bez WebGL nebo s omezeným pohybem zůstává
+       vodorovný průvod, jak ho lidé čtou na Instagramu. -->
+  <article class="blok cas" id="cas" data-galerie>
+    <div class="cas__pin">
+      <div class="cas__text">
+        <div class="blok__hlava">
+          <h3>Jak šel čas?</h3>
+          <p>Carousel pro Instagram. Cesta napříč všemi MS, kde ČR a ČSSR získalo zlato, seřazená chronologicky. Deset snímků.</p>
+        </div>
+        <p class="cas__rok" aria-hidden="true"><span class="cas__rok-hodnota">MS</span></p>
+        <p class="cas__popis" aria-live="polite">Úvodní slide</p>
+        <ol class="cas__osa" aria-hidden="true"><li><span>Úvod</span></li><li><span>1947</span></li><li><span>1985</span></li><li><span>1996</span></li><li><span>1999</span></li><li><span>2000</span></li><li><span>2001</span></li><li><span>2005</span></li><li><span>2010</span></li><li><span>2024</span></li></ol>
+        <p class="cas__napoveda">Scrolluj a carousel se otáčí. Kliknutím snímek zvětšíš.</p>
+      </div>
+      <div class="cas__scena">
+        <div class="scena__zare" aria-hidden="true"></div>
+        <canvas aria-label="Deset snímků carouselu Jak šel čas, rozestavěných do prstence"></canvas>
+      </div>
+    </div>
+    <div class="pruvod" tabindex="0">
+      <figure><img src="assets/img/prace/cas-00-cover.webp" alt="Jak šel čas, úvodní slide" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-1947.webp" alt="MS 1947" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-1985.webp" alt="MS 1985" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-1996.webp" alt="MS 1996" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-1999.webp" alt="MS 1999" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-2000.webp" alt="MS 2000" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-2001.webp" alt="MS 2001" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-2005.webp" alt="MS 2005" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-2010.webp" alt="MS 2010" decoding="async"></figure>
+      <figure><img src="assets/img/prace/cas-2024.webp" alt="MS 2024" decoding="async"></figure>
+    </div>
+  </article>
+
+  <!-- Green Line byla pětka, takže pět snímků stojí v rozestavení pětky:
+       tři útočníci vpředu, dva obránci za nimi. Bez WebGL zůstává bento. -->
+  <article class="blok green" id="green" data-galerie>
+    <div class="blok__hlava">
+      <h3>Green Line</h3>
+      <p>Carousel pro Instagram o sovětské pětce, která byla nejděsivější v historii hokeje. Pět snímků, tady rozestavených tak, jak pětka stála na ledě.</p>
+    </div>
+    <div class="green__scena">
+      <div class="scena__zare" aria-hidden="true"></div>
+      <canvas aria-label="Pět snímků Green Line rozestavěných na ledě jako hokejová pětka"></canvas>
+      <div class="green__stitky" aria-hidden="true"></div>
+      <p class="green__napoveda">Najeď na hráče, klikni pro detail</p>
+    </div>
+    <div class="bento">
+      <figure class="bento__velka" data-pozice="C"><img src="assets/img/prace/green-1.webp" alt="Green Line, nejděsivější pětka" decoding="async"></figure>
+      <figure data-pozice="LW"><img src="assets/img/prace/green-2.webp" alt="Ikonická trojice KLM Line" decoding="async"></figure>
+      <figure data-pozice="RW"><img src="assets/img/prace/green-3.webp" alt="Tichonovo peklo" decoding="async"></figure>
+      <figure data-pozice="LD"><img src="assets/img/prace/green-4.webp" alt="Fetisov a Kasatonov" decoding="async"></figure>
+      <figure data-pozice="RD"><img src="assets/img/prace/green-5.webp" alt="Nedostižný odkaz" decoding="async"></figure>
+    </div>
+  </article>
+
+  <!-- Náhled musí fungovat v malém i přes celou obrazovku. Místo tvrzení
+       si to návštěvník sám vyzkouší: posuvník ho zvětší od feedu na mobilu
+       až po plnou šířku. -->
+  <article class="blok nahledy" data-galerie>
+    <div class="blok__hlava">
+      <h3>Thumbnaily</h3>
+      <p>Náhledové grafiky pro videa na YouTube. Musí fungovat v malém i přes celou obrazovku. Vyzkoušej si to.</p>
+    </div>
+    <div class="nahledy__stul">
+      <div class="nahledy__platno">
+        <figure class="nahledy__karta">
+          <img src="assets/img/prace/thumb-holikovi.webp" alt="Holíkovi" decoding="async">
+          <figcaption class="nahledy__meta" aria-hidden="true"><span></span><span></span></figcaption>
+        </figure>
+        <p class="nahledy__mira" aria-hidden="true"><span class="nahledy__px">168</span> px</p>
+        <p class="nahledy__stetec-napoveda">Přetři náhled a uvidíš fotku, ze které vznikl</p>
+      </div>
+      <div class="nahledy__ovladani">
+        <label class="nahledy__posuvnik">
+          <span>Velikost náhledu</span>
+          <input type="range" min="0" max="1000" value="0" aria-valuetext="168 pixelů">
+        </label>
+        <div class="nahledy__zastavky">
+          <button type="button" data-zastavka="168">Feed na mobilu</button>
+          <button type="button" data-zastavka="246">Doporučená videa</button>
+          <button type="button" data-zastavka="360">Vyhledávání</button>
+          <button type="button" data-zastavka="max">Celá šířka</button>
+        </div>
+      </div>
+      <ul class="nahledy__vyber">
+        <li><button type="button" data-src="assets/img/prace/thumb-holikovi.webp" aria-label="Holíkovi" aria-pressed="true"><img src="assets/img/prace/thumb-holikovi.webp" alt="" decoding="async"></button></li>
+        <li><button type="button" data-src="assets/img/prace/thumb-nedomansky.webp" aria-label="Václav Nedomanský" aria-pressed="false"><img src="assets/img/prace/thumb-nedomansky.webp" alt="" decoding="async"></button></li>
+        <li><button type="button" data-src="assets/img/prace/thumb-brooks.webp" aria-label="Brooks" aria-pressed="false"><img src="assets/img/prace/thumb-brooks.webp" alt="" decoding="async"></button></li>
+        <li><button type="button" data-src="assets/img/prace/thumb-herb-brooks.webp" aria-label="Herb Brooks" aria-pressed="false"><img src="assets/img/prace/thumb-herb-brooks.webp" alt="" decoding="async"></button></li>
+        <li><button type="button" data-src="assets/img/prace/thumb-devadesatky.webp" aria-label="Hokejové devadesátky" aria-pressed="false"><img src="assets/img/prace/thumb-devadesatky.webp" alt="" decoding="async"></button></li>
+        <li><button type="button" data-src="assets/img/prace/thumb-bratri-nhl.webp" aria-label="Bratři v NHL" aria-pressed="false"><img src="assets/img/prace/thumb-bratri-nhl.webp" alt="" decoding="async"></button></li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- Značky patří na tmavý podklad, jinak splynou s papírem. -->
+  <article class="blok blok--tmavy" data-galerie>
+    <div class="blok__hlava">
+      <h3>Loga</h3>
+      <p>Loga pro Boží kytky a BSK a logo videokanálu Deníku Hokeje v červené a černobílé variantě.</p>
+    </div>
+    <div class="znacky">
+      <figure><img src="assets/img/prace/logo-1.webp" alt="Logo Boží kytky" decoding="async"></figure>
+      <figure><img src="assets/img/prace/logo-2.webp" alt="Logo BSK" decoding="async"></figure>
+      <figure><img src="assets/img/prace/logo-kanal-cervene.webp" alt="Logo kanálu, červená varianta" decoding="async"></figure>
+      <figure><img src="assets/img/prace/logo-kanal-cernobile.webp" alt="Logo kanálu, černobílá varianta" decoding="async"></figure>
+    </div>
+  </article>
+</section>
+
+<!-- Závěrečná výzva ------------------------------------------------- -->
+<section class="sekce sekce--oranzova" id="sluzby">
+  <div class="vyzva">
+    <div class="vyzva__text">
+      <h2 class="sekce__nadpis">Jeden člověk.<br>Víc disciplín.</h2>
+      <p class="sekce__lede">
+        Odbavím celou zakázku od značky po hotový web. Bez předávání
+        mezi třemi dodavateli.
+      </p>
+    </div>
+
+    <!-- Volba zakázky: návštěvník si zaškrtne, co potřebuje, a pod tím se
+         poskládá pořadí kroků, které Karel odbaví sám. Tlačítko pak vepíše
+         výběr do formuláře. Stylem připomíná export ve střihovém programu. -->
+    <form class="export" aria-labelledby="export-nadpis">
+      <div class="export__lista">
+        <p id="export-nadpis">Exportovat zakázku</p>
+        <span class="export__preset">1 člověk</span>
+      </div>
+      <div class="export__telo">
+        <fieldset class="export__volby">
+          <legend>Co potřebujete?</legend>
+          <ul>
+          <li>
+            <label class="export__volba">
+              <input type="checkbox" value="znacka" data-do-zpravy="logo a značku" checked>
+              <span class="export__ikona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 1 0-18c4.97 0 9 3.58 9 8 0 1.06-.47 2.08-1.32 2.83-.84.75-1.99 1.17-3.18 1.17h-2a2 2 0 0 0-1 3.75A1.3 1.3 0 0 1 12 21"/><circle cx="7.5" cy="10.5" r=".6"/><circle cx="12" cy="7.5" r=".6"/><circle cx="16.5" cy="10.5" r=".6"/></svg></span>
+              <span class="export__nazev">Logo a značka</span>
+              <span class="export__popis">Identita, barvy, písmo</span>
+              <span class="export__zatrzitko" aria-hidden="true"></span>
+            </label>
+          </li>
+          <li>
+            <label class="export__volba">
+              <input type="checkbox" value="web" data-do-zpravy="web" checked>
+              <span class="export__ikona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="M14 4l-4 16"/></svg></span>
+              <span class="export__nazev">Web</span>
+              <span class="export__popis">Návrh, frontend i backend</span>
+              <span class="export__zatrzitko" aria-hidden="true"></span>
+            </label>
+          </li>
+          <li>
+            <label class="export__volba">
+              <input type="checkbox" value="video" data-do-zpravy="video">
+              <span class="export__ikona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.55-2.28A1 1 0 0 1 21 8.62v6.76a1 1 0 0 1-1.45.9L15 14z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></span>
+              <span class="export__nazev">Video</span>
+              <span class="export__popis">Střih, motion, náhledy</span>
+              <span class="export__zatrzitko" aria-hidden="true"></span>
+            </label>
+          </li>
+          <li>
+            <label class="export__volba">
+              <input type="checkbox" value="site" data-do-zpravy="obsah na sociální sítě">
+              <span class="export__ikona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a3 3 0 0 1 0 6"/><path d="M10 8v11a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-3"/><path d="M12 8h0l5-3v14l-5-3H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1z"/></svg></span>
+              <span class="export__nazev">Sociální sítě</span>
+              <span class="export__popis">Carousely a obsah</span>
+              <span class="export__zatrzitko" aria-hidden="true"></span>
+            </label>
+          </li>
+          <li>
+            <label class="export__volba">
+              <input type="checkbox" value="ai" data-do-zpravy="AI automatizaci">
+              <span class="export__ikona" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="1"/><rect x="9" y="9" width="6" height="6"/><path d="M3 10h2M3 14h2M19 10h2M19 14h2M10 3v2M14 3v2M10 19v2M14 19v2"/></svg></span>
+              <span class="export__nazev">AI automatizace</span>
+              <span class="export__popis">Systémy, které šetří čas</span>
+              <span class="export__zatrzitko" aria-hidden="true"></span>
+            </label>
+          </li>
+          </ul>
+        </fieldset>
+        <div class="export__vystup">
+          <p class="export__stitek">Pořadí práce</p>
+          <ol class="export__plan" aria-live="polite"></ol>
+          <p class="export__souhrn" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="export__pata">
+        <p class="export__poznamka">Výběr se vepíše do formuláře. Nic se zatím neodesílá.</p>
+        <button type="submit" class="btn btn--svetly export__tlacitko"><span>Exportovat zakázku</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M12 4H5.5M12 4v6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Kontakt ---------------------------------------------------------- -->
+<section class="sekce sekce--svetla" id="kontakt">
+  <header class="sekce__hlava">
+    <h2 class="sekce__nadpis">Pojďme vytvořit<br>něco nemožného.</h2>
+    <p class="sekce__lede">
+      Napište mi, co máte v hlavě. Ozvu se do dvou dnů a řekneme si,
+      jestli vám s tím umím pomoct.
+    </p>
+  </header>
+
+  <div class="kontakt">
+    <form class="formular" action="https://api.web3forms.com/submit" method="post" novalidate>
+      <input type="hidden" name="access_key" value="">
+      <input type="hidden" name="subject" value="Nová zpráva z webu drexler.digital">
+      <input type="checkbox" name="botcheck" class="pastnabot" tabindex="-1" autocomplete="off">
+
+      <label>Jméno<input type="text" name="jmeno" placeholder="Jak vám mám říkat?" required></label>
+      <label>E-mail<input type="email" name="email" placeholder="kam se vám mám ozvat" required></label>
+      <label class="siroke">Co potřebujete?<textarea name="zprava" rows="5" placeholder="Pár vět stačí." required></textarea></label>
+      <button type="submit" class="btn btn--tmavy"><span data-klid="Odeslat">Odeslat</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 12L12 4M12 4H5.5M12 4v6.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  
+      <p class="hlaska" role="status" aria-live="polite"></p>
+    </form>
+
+    <aside class="vizitka">
+      <p class="vizitka__jmeno">Karel Drexler</p>
+      <p class="vizitka__role">Designér, střihač, vývojář</p>
+
+      <ul class="spojeni">
+        <li>
+          <span class="spojeni__ikona" aria-hidden="true">
+            <!-- Tabler Icons (MIT): mail -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m3 7 9 6 9-6"/></svg>
+          </span>
+          <span class="spojeni__co">E-mail</span>
+          <a class="spojeni__hodnota" href="mailto:drexleroutreach@gmail.com">drexleroutreach@gmail.com</a>
+        </li>
+        <li>
+          <span class="spojeni__ikona" aria-hidden="true">
+            <!-- Tabler Icons (MIT): brand-instagram -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/><path d="M16.5 7.5v.01"/></svg>
+          </span>
+          <span class="spojeni__co">Instagram</span>
+          <a class="spojeni__hodnota" href="https://www.instagram.com/k_drexler_/" target="_blank" rel="noopener">@k_drexler_</a>
+        </li>
+        <li>
+          <span class="spojeni__ikona" aria-hidden="true">
+            <!-- Tabler Icons (MIT): brand-linkedin -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></svg>
+          </span>
+          <span class="spojeni__co">LinkedIn</span>
+          <a class="spojeni__hodnota" href="https://www.linkedin.com/in/karel-drexler-a0ab07300/" target="_blank" rel="noopener">Karel Drexler</a>
+        </li>
+      </ul>
+
+      <p class="vizitka__stav">Právě beru zakázky na další čtvrtletí.</p>
+    </aside>
+  </div>
+</section>
+</main>
+
+<dialog class="lightbox" aria-label="Detail práce">
+  <figure class="lightbox__obraz">
+    <figcaption></figcaption>
+  </figure>
+  <button class="lightbox__zavrit" type="button" aria-label="Zavřít">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+  </button>
+  <button class="lightbox__sipka lightbox__sipka--zpet" type="button" aria-label="Předchozí">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="lightbox__sipka lightbox__sipka--dal" type="button" aria-label="Další">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <p class="lightbox__pocet" aria-live="polite"></p>
+</dialog>
+
+<footer class="paticka">
+  <p class="paticka__jmeno">Karel Drexler</p>
+  <p class="paticka__role">Designér / Střihač / Vývojář / Podnikatel</p>
+  <nav class="paticka__site">
+    <a href="https://www.instagram.com/k_drexler_/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.linkedin.com/in/karel-drexler-a0ab07300/" target="_blank" rel="noopener">LinkedIn</a>
+  </nav>
+  <p class="paticka__copy">© 2026</p>
+</footer>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+/* Tokeny ------------------------------------------------------------- */
+/* Oranžová řada je odečtená přímo z předlohy, ne odhadnutá: rohy desky
+   jsou cihlové (#8e2308), světlo sedí za postavou (#f88608). */
+:root {
+  --brick: #7c1c06;
+  --orange-900: #8e2308;
+  --orange-700: #a82f07;
+  --orange-600: #c04309;
+  --orange-500: #e1650b;
+  --orange-400: #f88608;
+  --ink: #16120f;
+  --ink-soft: #4a423c;
+  --paper: #ffffff;
+  --bone: #f3f1ee;
+
+  --rail: clamp(20px, 4vw, 64px);
+  /* Levý sloupec hera stojí o kus dál než zbytek stránky. */
+  --rail-hero: calc(clamp(20px, 4vw, 64px) + clamp(6px, 2.2vw, 34px));
+  --nav-h: 76px;
+
+  --display: 'Bricolage Grotesque', system-ui, sans-serif;
+  /* Nadpis v předloze je kondenzovaný grotesk — Bricolage je na něj
+     příliš široký a slovo se pak nevejde vedle postavy. */
+  --hero-face: 'Anton', 'Bricolage Grotesque', system-ui, sans-serif;
+  --text: 'Inter Tight', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--text);
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Navigace ----------------------------------------------------------- */
+.nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 5;
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 var(--rail);
+}
+
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.nav__mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px 12px 6px 12px;
+  background: var(--paper);
+  transform: rotate(-12deg);
+}
+
+.nav__links {
+  margin-left: auto;
+  display: flex;
+  gap: clamp(18px, 2.4vw, 40px);
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.nav__links a { position: relative; padding: 4px 0; }
+
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1);
+}
+
+.nav__links a:hover::after { transform: scaleX(1); }
+
+.nav__burger {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-content: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  cursor: pointer;
+}
+
+.nav__burger span {
+  display: block;
+  width: 15px;
+  height: 1.6px;
+  background: var(--paper);
+}
+
+/* Hero --------------------------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--paper);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+/* Teplá deska leží pod vším; bílý panel je karta položená na ní. */
+.hero__warm {
+  position: absolute;
+  inset: 0;
+  /* Plynulý diagonální přechod: cihlová vlevo nahoře, žhavá oranžová
+     vpravo dole, kde stojí postava. Žádné ostré kotouče. */
+  background-image: url('assets/img/hero-bg.png');
+  /* Mapa pokrývá levou polovinu; napravo ji zrcadlově dotáhneme. */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* Kotouče v pozadí. V předloze se od okolí liší jen o pár jednotek jasu
+   a mají zřetelnou, ale měkkou hranu — proto tak nízké krytí. */
+.hero__rings {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 6%,
+      rgba(255, 224, 180, .085) 0 26%, rgba(255, 224, 180, 0) 26.6%),
+    radial-gradient(circle at 70% 18%,
+      rgba(255, 214, 160, .065) 0 17%, rgba(255, 214, 160, 0) 17.5%),
+    radial-gradient(circle at 44% 82%,
+      rgba(255, 200, 140, .07) 0 22%, rgba(255, 200, 140, 0) 22.5%);
+}
+
+/* Bílá karta: změřeno z předlohy — 50,3 až 99,5 % šířky, s odskokem
+   od horní i spodní hrany a zaoblenými rohy. */
+.hero__panel {
+  position: absolute;
+  z-index: 1;
+  /* Odskok stejný nahoře, vpravo i dole — v procentech by svislá
+     mezera vyšla jinak než vodorovná. */
+  top: clamp(10px, 1.5vh, 18px);
+  right: clamp(10px, 1.5vh, 18px);
+  bottom: clamp(10px, 1.5vh, 18px);
+  left: 50.3%;
+  background: var(--paper);
+  border-radius: clamp(18px, 2.6vw, 38px);
+}
+
+
+/* Portrét sedí na předělu a přesahuje do bílé části. */
+.hero__portrait {
+  position: absolute;
+  z-index: 2;
+  /* Postava sedí na předělu a ramenem přetéká do bílé části.
+     Snímek už míří doprava, takže se nezrcadlí. Posazená je níž, aby
+     nad hlavou zůstal vzduch a rameno odešlo pod spodní hranu místo
+     aby se uříznulo v obraze. */
+  bottom: -17%;
+  left: 51%;
+  /* --hloubka nastavuje JS na heru při scrollu: portrét jede pomaleji než
+     text, takže hero dostane hloubku. */
+  transform: translateX(-50%) translateY(var(--hloubka, 0px));
+  height: 106%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom center;
+  /* Snímek už je nagradovaný do oranžové, stačí přisadit kontrast. */
+  filter: contrast(1.05) saturate(1.06) drop-shadow(0 30px 60px rgba(60, 18, 0, .35));
+  pointer-events: none;
+}
+
+/* Levý sloupec ------------------------------------------------------- */
+/* Pod portrétem (z-index 2), aby nadpis mizel za hlavou. */
+.hero__left {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--nav-h) 0 clamp(70px, 12vh, 130px) var(--rail-hero);
+  color: var(--paper);
+  pointer-events: none;
+}
+
+.hero__left > * { pointer-events: auto; }
+
+.hero__title {
+  margin: 0;
+  font-family: var(--hero-face);
+  font-weight: 400;
+  /* Nadpis musí doběhnout dřív, než začne postava — jako v předloze. */
+  font-size: clamp(92px, 17.3vw, 300px);
+  line-height: .84;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  transform: scaleX(.72);
+  transform-origin: left center;
+  /* Box na šířku textu, aby se maska níže vztahovala k písmenům. */
+  width: fit-content;
+  /* Nadpis nekončí řezem, ale vytrácí se do postavy. */
+  -webkit-mask-image: linear-gradient(90deg, #000 0 93%, rgba(0, 0, 0, .55) 97.5%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0 93%, rgba(0, 0, 0, .55) 97.5%, transparent 100%);
+}
+
+.hero__title .line {
+  display: block;
+  overflow: hidden;
+  /* Prostor pro háček a čárku. Záporný margin by je vystrčil nad box
+     nadpisu, kam nesahá jeho maska, a zmizely by. */
+  padding-top: .30em;
+}
+
+.hero__title .line > span {
+  display: block;
+  transform: translateY(105%);
+  animation: rise 1s cubic-bezier(.16,1,.3,1) .15s forwards;
+}
+
+@keyframes rise { to { transform: translateY(0); } }
+
+.hero__lede {
+  margin: clamp(24px, 4.6vh, 50px) 0 0;
+  font-size: clamp(14px, 1.15vw, 17px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, .92);
+  max-width: 24ch;
+}
+
+.btn {
+  margin-top: clamp(22px, 4vh, 44px);
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 26px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--orange-700);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* Zvednutí při najetí a stisk drží proměnné, aby se skládaly do jedné
+     transformace. Přechod je pružina, takže se tlačítko po puštění odhoupne. */
+  --btn-zvednuti: 0px;
+  --btn-stisk: 1;
+  transform: translate(var(--mag-x, 0px), calc(var(--btn-zvednuti) + var(--mag-y, 0px))) scale(var(--btn-stisk));
+  transition: transform .45s cubic-bezier(.22, 1.4, .36, 1), box-shadow .35s;
+  will-change: transform;
+}
+
+.btn svg {
+  width: 15px;
+  height: 15px;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.btn:hover {
+  --btn-zvednuti: -3px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
+}
+
+/* Šipka popojede dopředu, jakmile na tlačítko najedeš. */
+.btn:hover svg { transform: translateX(4px); }
+
+/* Stisk: tlačítko se zmáčkne a pružina ho vrátí. */
+.btn:active { --btn-stisk: .955; transition-duration: .09s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .btn svg { transition: none; }
+  .btn { --btn-zvednuti: 0px; --btn-stisk: 1; }
+}
+
+/* Trust pás ---------------------------------------------------------- */
+.trust {
+  position: absolute;
+  left: var(--rail-hero);
+  bottom: clamp(62px, 13vh, 124px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 14px;
+  max-width: 40%;
+}
+
+.trust__nadpis {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .62);
+}
+
+.trust__jmena {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.trust__jmena li {
+  padding: 7px 12px;
+  border: 1px solid rgba(255, 255, 255, .34);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--paper);
+  background: rgba(124, 28, 6, .22);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Pravý sloupec ------------------------------------------------------ */
+.hero__right {
+  position: relative;
+  z-index: 3;
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-h) + 22px) var(--rail) clamp(28px, 5vh, 56px) 48%;
+}
+
+.avail {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange-600);
+}
+
+.avail__what {
+  margin: 12px 0 0;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(26px, 2.5vw, 40px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+}
+
+/* Karta poslední práce: skutečný projekt místo citace, kterou nikdo neřekl. */
+.posledni {
+  margin: auto 0 0;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px 12px 12px;
+  border-radius: 16px;
+  background: var(--bone);
+  transition: background .35s, transform .45s cubic-bezier(.22, 1.4, .36, 1);
+}
+
+.posledni img {
+  width: 64px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(60, 18, 0, .18);
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+}
+
+.posledni__text { display: grid; gap: 3px; }
+
+.posledni__stitek {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--orange-600);
+}
+
+.posledni__nazev {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -.02em;
+}
+
+.posledni__kde { font-size: 13px; color: var(--ink-soft); }
+
+.posledni svg {
+  width: 16px;
+  height: 16px;
+  color: var(--orange-600);
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+.posledni:hover { background: #ece8e3; transform: translateY(-2px); }
+.posledni:hover img { transform: rotate(-4deg) scale(1.04); }
+.posledni:hover svg { transform: translate(2px, -2px); }
+
+/* Úzké obrazovky ----------------------------------------------------- */
+@media (max-width: 900px) {
+  /* Na úzkém displeji se hero skládá pod sebe: text, portrét, karta.
+     Vedle sebe by portrét zakryl nadpis. */
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    min-height: 0;
+  }
+
+  .hero__panel { display: none; }
+
+  .hero__left {
+    grid-column: 1;
+    grid-row: 1;
+    padding: calc(var(--nav-h) + 18px) var(--rail) 0 var(--rail);
+  }
+
+  .hero__title { font-size: clamp(92px, 33vw, 200px); }
+
+  .hero__portrait {
+    position: relative;
+    grid-row: 2;
+    left: auto;
+    bottom: auto;
+    justify-self: end;
+    width: min(88%, 460px);
+    height: auto;
+    margin-top: -4vw;
+    transform: translateY(var(--hloubka, 0px));
+  }
+
+  .hero__right {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: -32px;
+    padding: 28px var(--rail);
+    border-radius: 28px 28px 0 0;
+    background: var(--paper);
+  }
+
+  .posledni { margin-top: 22px; }
+  .trust { position: static; max-width: none; margin-top: 26px; }
+
+  .nav__links { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title .line > span { transform: none; animation: none; }
+  .btn { transition: none; }
+}
+
+/* Burger se při otevření změní na křížek. */
+.nav__burger span { transition: transform .45s cubic-bezier(.16, 1, .3, 1); }
+.nav__burger[aria-expanded="true"] span:first-child { transform: translateY(3.3px) rotate(45deg); }
+.nav__burger[aria-expanded="true"] span:last-child { transform: translateY(-3.3px) rotate(-45deg); }
+
+.menu-otevreno .nav { z-index: 31; }
+.menu-otevreno .nav__links { visibility: hidden; }
+
+/* Menu ----------------------------------------------------------------- */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: calc(var(--nav-h) + 4vh) var(--rail) clamp(28px, 5vh, 56px);
+  color: var(--paper);
+  background: linear-gradient(138deg, #7d1d07 0%, #a83709 42%, #c84803 68%, #e2660a 100%);
+  clip-path: circle(0% at calc(100% - var(--rail) - 21px) 38px);
+  transition: clip-path .8s cubic-bezier(.76, 0, .24, 1), visibility 0s linear .8s;
+  visibility: hidden;
+}
+
+.menu[hidden] { display: none; }
+
+.menu.je-otevrene {
+  clip-path: circle(150% at calc(100% - var(--rail) - 21px) 38px);
+  transition: clip-path .8s cubic-bezier(.76, 0, .24, 1);
+  visibility: visible;
+}
+
+.menu__odkazy {
+  align-self: center;
+  display: grid;
+  gap: clamp(2px, 1vh, 10px);
+}
+
+.menu__odkazy a {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(14px, 2vw, 28px);
+  overflow: hidden;
+  font-family: var(--hero-face);
+  font-size: clamp(46px, 9.5vh, 112px);
+  line-height: 1.12;
+  text-transform: uppercase;
+}
+
+.menu__cislo {
+  font-family: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: rgba(255, 255, 255, .6);
+}
+
+.menu__slovo {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1), color .3s;
+}
+
+.menu.je-otevrene .menu__slovo { transform: none; }
+.menu.je-otevrene a:nth-child(1) .menu__slovo { transition-delay: .20s, 0s; }
+.menu.je-otevrene a:nth-child(2) .menu__slovo { transition-delay: .26s, 0s; }
+.menu.je-otevrene a:nth-child(3) .menu__slovo { transition-delay: .32s, 0s; }
+.menu.je-otevrene a:nth-child(4) .menu__slovo { transition-delay: .38s, 0s; }
+.menu.je-otevrene a:nth-child(5) .menu__slovo { transition-delay: .44s, 0s; }
+
+.menu__odkazy a:hover .menu__slovo { color: #ffd9b8; transform: translateX(10px); transition-delay: 0s; }
+
+.menu__pata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  font-size: 14px;
+}
+
+.menu__pata a { border-bottom: 1px solid rgba(255, 255, 255, .35); padding-bottom: 3px; }
+
+.menu-otevreno { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .menu, .menu.je-otevrene { transition: none; }
+  .menu__slovo { transform: none; transition: none; }
+}
