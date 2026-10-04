@@ -451,8 +451,11 @@ a { color: inherit; text-decoration: none; }
     justify-self: end;
     width: min(88%, 460px);
     height: auto;
-    margin-top: -4vw;
-    transform: translateY(var(--hloubka, 0px));
+    /* Výš a bez paralaxy: posun při scrollu by hlavu zasunul pod kartu
+       a ta by usekla krk. */
+    margin-top: -12vw;
+    margin-bottom: 8px;
+    transform: none;
   }
 
   .hero__right {
